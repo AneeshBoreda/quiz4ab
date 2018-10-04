@@ -16,7 +16,8 @@ public class EndActivity extends AppCompatActivity {
     private TextView mCurrentScore;
     private String currentUser;
     private Button mClearScores;
-    private TextView[] mScores;
+    private Button mViewGlobal;
+    private TextView mScores;
     private Scoreboard mScoreboard;
     @Override
     public void onBackPressed()
@@ -26,25 +27,27 @@ public class EndActivity extends AppCompatActivity {
     private void updateScoreboard()
     {
         boolean empty=false;
-        for(int i=0; i<5;i++)
+        String sbtext="";
+        for(int i=0; i<mScoreboard.getMaxScores();i++)
         {
             if(!empty) {
                 String name = mScoreboard.getName(i);
                 if (name == null) {
                     empty = true;
-                    mScores[i].setText((i+1)+". - - - - -");
+                    sbtext+=(i+1)+". - - - - -\n";
                     continue;
                 }
                 int score=mScoreboard.getScore(i);
                 //mScoreboard.printScores();
-                mScores[i].setText((i+1)+". "+name+" - "+score);
+                sbtext+=((i+1)+". "+name+" - "+score+"\n");
             }
             else
             {
-                mScores[i].setText((i+1)+". - - - - -");
+                sbtext+=((i+1)+". - - - - -\n");
             }
 
         }
+        mScores.setText(sbtext);
 
     }
     @Override
@@ -56,14 +59,10 @@ public class EndActivity extends AppCompatActivity {
         mSharedPrefE=mSharedPref.edit();
         currentUser=mSharedPref.getString("CURRENTNAME",null);
         mCurrentScore=(TextView) findViewById(R.id.current_score);
-        mCurrentScore.setText("Unfortunate, "+currentUser+". Your score is only "+mUserScore);
+        mCurrentScore.setText(currentUser+", your score was "+mUserScore);
         mClearScores=(Button) findViewById(R.id.clear_scores);
-        mScores=new TextView[5];
-        mScores[0]=(TextView)findViewById(R.id.score0);
-        mScores[1]=(TextView)findViewById(R.id.score1);
-        mScores[2]=(TextView)findViewById(R.id.score2);
-        mScores[3]=(TextView)findViewById(R.id.score3);
-        mScores[4]=(TextView)findViewById(R.id.score4);
+        mScores=(TextView)findViewById(R.id.scores);
+
         mScoreboard=new Scoreboard(mSharedPref,mSharedPrefE);
         mScoreboard.addScore(currentUser,mUserScore);
         updateScoreboard();

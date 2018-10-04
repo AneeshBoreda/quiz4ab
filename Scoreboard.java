@@ -9,13 +9,14 @@ public class Scoreboard {
     private SharedPreferences.Editor mSharedPrefE;
     private ArrayList<Integer> scores;
     private ArrayList<String> names;
+    private int maxScores=10;
     public Scoreboard(SharedPreferences sP, SharedPreferences.Editor sPE)
     {
         mSharedPref=sP;
         mSharedPrefE=sPE;
         scores=new ArrayList<>();
         names=new ArrayList<>();
-        for(int i=1; i<=5; i++)
+        for(int i=1; i<=maxScores; i++)
         {
             String value=mSharedPref.getString(i+"",null);
             if(value==null)
@@ -29,9 +30,13 @@ public class Scoreboard {
         System.out.println(names);
         System.out.println(scores);
     }
+    public int getMaxScores()
+    {
+        return maxScores;
+    }
     public void clearScores()
     {
-        for(int i=1; i<=5; i++)
+        for(int i=1; i<=maxScores; i++)
         {
             mSharedPrefE.remove(i+"");
         }
@@ -42,16 +47,16 @@ public class Scoreboard {
     public void addScore(String name, int score)
     {
 
-        for(int i=0;i<5;i++)
+        for(int i=0;i<maxScores;i++)
         {
             if(i<scores.size()) {
                 if (score > scores.get(i)) {
 
                     scores.add(i, score);
                     names.add(i, name);
-                    if(scores.size()>5) {
-                        scores.remove(5);
-                        names.remove(5);
+                    if(scores.size()>maxScores) {
+                        scores.remove(maxScores);
+                        names.remove(maxScores);
 
                     }
                     break;
@@ -89,7 +94,7 @@ public class Scoreboard {
     }
     public void printScores()
     {
-        for(int i = 0; i<5; i++)
+        for(int i = 0; i<maxScores; i++)
         {
             if(getName(i)!=null)
             {
